@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: do-pod-dns-controller
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: do-pod-dns-controller
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get","watch","list"]
+- apiGroups: [""]
+  resources: ["nodes"]
+  verbs: ["list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: do-pod-dns-controller-viewer
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: do-pod-dns-controller
+subjects:
+- kind: ServiceAccount
+  name: do-pod-dns-controller
+  namespace: default
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: do-pod-dns-controller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: do-pod-dns-controller
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: do-pod-dns-controller
+    spec:
+      serviceAccountName: do-pod-dns-controller
+      imagePullSecrets:
+      - name: registry-commubernetes
+      containers:
+      - name: do-pod-dns-controller
+        image: srl8/do-pod-dns-controller:0.1.2
+        args:
+        - --domain=example.com
+        env:
+        - name: DIGITALOCEAN_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: digitalocean
+              key: DIGITALOCEAN_TOKEN
