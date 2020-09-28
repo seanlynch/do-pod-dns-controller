@@ -31,6 +31,9 @@ will not touch any other records.
 How do I use it?
 ----------------
 
+The latest build (using a Debian-based image) is on
+[Dockerhub](https://hub.docker.com/r/srl8/do-pod-dns-controller).
+
 Use a manifest similar to the one under examples. Generate a
 DigitalOcean token and set that in a secret that ends up as
 DIGITALOCEAN_TOKEN in the controller's environment. Make sure you've
