@@ -62,6 +62,20 @@ wrong. You can add `--log-level=debug` to the args to get more
 logging.
 
 
+Why do you only support DigitalOcean?
+-------------------------------------
+
+Because this is really a job for
+[external-dns](https://github.com/kubernetes-sigs/external-dns/). There
+is a [PR from January
+2020](https://github.com/kubernetes-sigs/external-dns/pull/1391) that,
+as far as I can tell, does exactly what this controller does. Once
+that's merged I'll try it out, and if it covers the use case for this
+project, I'll deprecate it. I will consider PRs to add support for
+other providers, though, especially if the external-dns PR languishes
+in "when everybody's responsible nobody is" hell for much longer.
+
+
 Code of conduct
 ---------------
 
